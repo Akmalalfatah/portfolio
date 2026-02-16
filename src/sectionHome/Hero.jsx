@@ -14,7 +14,9 @@ export default function Hero() {
     const ENABLE_INTRO = true;
 
     const ctx = gsap.context(() => {
-      document.fonts.ready.then(() => {
+
+      const startAnimation = () => {
+
         gsap.killTweensOf("*");
 
         const createCounterDigits = () => {
@@ -102,7 +104,6 @@ export default function Hero() {
             animateCounter(".counter-3", 9, 3);
             animateCounter(".counter-2", 9, 2.5);
             animateCounter(".counter-1", 9, 2);
-
           }).to(".intro", {
             scaleY: 0,
             transformOrigin: "top",
@@ -167,8 +168,16 @@ export default function Hero() {
             },
             "<"
           );
-      });
+      };
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(startAnimation);
+      } else {
+        startAnimation();
+      }
+
     });
+
     return () => {
       ctx.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -177,7 +186,7 @@ export default function Hero() {
 
   return (
     <>
-      <section className="intro fixed inset-0 z-50 flex items-center justify-center font-ui">
+      <section className="intro fixed inset-0 z-[9999] flex items-center justify-center font-ui bg-white">
         <div className="counter flex text-8xl leading-none">
           <div className="counter-1 digit h-[120px] overflow-hidden"></div>
           <div className="counter-2 digit h-[120px] overflow-hidden"></div>
