@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 
@@ -7,11 +7,31 @@ gsap.registerPlugin(SplitText);
 export default function AboutPage() {
 
     const pageRef = useRef(null);
+    const [fontsReady, setFontsReady] = useState(false);
 
     useEffect(() => {
+        // Wait for fonts to load
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                setFontsReady(true);
+            });
+        } else {
+            setFontsReady(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!fontsReady) return;
+
         const ctx = gsap.context(() => {
 
-            gsap.set(pageRef.current, { y: "0%" });
+            const titleElements = document.querySelectorAll(".about-title");
+            const paragraphElements = document.querySelectorAll(".about-paragraph");
+
+            if (!titleElements.length || !paragraphElements.length) {
+                console.log("Elements not found");
+                return;
+            }
 
             const splitTitle = new SplitText(".about-title", {
                 type: "lines",
@@ -25,27 +45,26 @@ export default function AboutPage() {
 
             const tl = gsap.timeline();
 
-            tl.to(pageRef.current, {
-                y: "0%",
-                duration: 1.2,
-                ease: "expo.inOut",
-            })
-
-            .fromTo(
+            tl.fromTo(
                 splitTitle.lines,
-                { clipPath: "inset(100% 0% 0% 0%)" },
+                { 
+                    clipPath: "inset(100% 0% 0% 0%)",
+                    opacity: 1
+                },
                 {
                     clipPath: "inset(0% 0% 0% 0%)",
                     duration: 1.6,
                     ease: "expo.out",
                     stagger: 0.12,
-                },
-                "-=0.6"
+                }
             )
 
             .fromTo(
                 splitParagraphs.lines,
-                { clipPath: "inset(100% 0% 0% 0%)" },
+                { 
+                    clipPath: "inset(100% 0% 0% 0%)",
+                    opacity: 1
+                },
                 {
                     clipPath: "inset(0% 0% 0% 0%)",
                     duration: 1.4,
@@ -58,7 +77,7 @@ export default function AboutPage() {
         }, pageRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [fontsReady]);
 
     return (
         <section
