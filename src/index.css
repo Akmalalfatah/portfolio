@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('./assets/fonts/PlayfairDisplay-Regular.ttf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('./assets/fonts/PlayfairDisplay-Italic.ttf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('./assets/fonts/PlayfairDisplay-Medium.ttf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('./assets/fonts/PlayfairDisplay-MediumItalic.ttf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('./assets/fonts/ppneuemontreal-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('./assets/fonts/ppneuemontreal-italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('./assets/fonts/ppneuemontreal-semibolditalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+.font-ui {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-display {
+  font-family: 'PP Neue Montreal', system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-display: 'Playfair Display', serif;
+  --font-ui: 'PP Neue Montreal', system-ui, sans-serif;
+
+  --color-bg-primary: #FFFAF1;
+  --color-bg-secondary: #1C1C1C;
+  --color-text-primary: #1C1C1C;
+  --color-text-secondary: #FFFAF1;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.intro {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.intro {
+  transform-origin: bottom;
+}
+
+.digit {
+  overflow: hidden;
+  height: 120px;
+}
+
+.reel {
+  will-change: transform;
+}
+
+.num {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary)
+}
+
+.hero {
+  transform-origin: bottom;
+}
+
+.nav-logo {
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.line {
+  overflow: hidden;
+  display: block;
+}
+
+.photo-wrap,
+.laptop-wrap,
+.airpods-wrap {
+  clip-path: inset(100% 0% 0% 0%);
+  will-change: clip-path;
+}
+
+.spotlight-images {
+  pointer-events: none;
+}
+
+.spotlight-img {
+  overflow: hidden;
+  will-change: transform;
+}
+
+@keyframes slow-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nav-logo-rotate {
+  animation: slow-rotate 12s linear infinite;
+}
