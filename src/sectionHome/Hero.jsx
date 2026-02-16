@@ -11,7 +11,7 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 export default function Hero() {
   useEffect(() => {
     window.scrollTo(0, 0);
-    const ENABLE_INTRO = false;
+    const ENABLE_INTRO = true;
 
     const ctx = gsap.context(() => {
       document.fonts.ready.then(() => {
