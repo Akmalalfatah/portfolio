@@ -117,7 +117,7 @@ export default function Navbar() {
         </ul>
 
         <a
-          href="/Akmal-Al-Fatah-CV.pdf"
+          href="./CV_M Akmal Al Fatah.pdf"
           download
           className="hidden md:block text-[22px] font-display whitespace-nowrap"
         >

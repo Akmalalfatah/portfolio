@@ -105,7 +105,7 @@ export default function Hero({ introComplete }) {
         tl.to(".hero", {
           scaleY: 1,
           transformOrigin: "bottom",
-          duration: 1.2,
+          duration: 0.5,
           ease: "expo.inOut",
         })
           .to(
