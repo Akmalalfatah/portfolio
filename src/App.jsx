@@ -1,6 +1,6 @@
 import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import ScrollToTop from "./ScrollToTop"
 import Intro from "./sectionHome/Intro"
 import Navbar from "./components/navbar/Navbar"
@@ -14,12 +14,18 @@ function App() {
   const [introComplete, setIntroComplete] = useState(false);
 
   useEffect(() => {
-    const introShown = sessionStorage.getItem("introShown");
-    if (introShown) {
-      setIntroComplete(true);
-    }
+    // Clear the navigation flag on page refresh
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem("hasNavigated");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
-  
+
   return (
     <BrowserRouter>
       <Intro onComplete={() => setIntroComplete(true)} />
@@ -27,7 +33,7 @@ function App() {
       <div className="overflow-hidden">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home introComplete={introComplete} />} />
           <Route path="/work" element={<Work />} />
           <Route path="/work/:slug" element={<WorkDetail />} />
           <Route path="/about" element={<About />} />

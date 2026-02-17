@@ -96,7 +96,6 @@ export default function WorkPage() {
         return () => ctx.revert();
     }, []);
 
-    // Filter change animation
     useEffect(() => {
         if (!hasAnimated.current) return;
 

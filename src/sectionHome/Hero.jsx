@@ -8,10 +8,13 @@ import { ScrollTrigger } from "gsap/all";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
-export default function Hero() {
+export default function Hero({ introComplete }) {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
 
   useEffect(() => {
+    // HIDE EVERYTHING IMMEDIATELY on mount
+    gsap.set(".hero", { scaleY: 0 });
+
     // Preload assets
     const preloadAssets = async () => {
       const imagePromises = [
@@ -40,9 +43,6 @@ export default function Hero() {
         document.fonts.ready
       ]);
 
-      // Small delay to ensure smooth animation
-      await new Promise(resolve => setTimeout(resolve, 300));
-
       setAssetsLoaded(true);
     };
 
@@ -50,7 +50,8 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    if (!assetsLoaded) return;
+    // WAIT for both assets AND intro to complete
+    if (!assetsLoaded || !introComplete) return;
 
     const ctx = gsap.context(() => {
       const startAnimation = () => {
@@ -68,6 +69,12 @@ export default function Hero() {
           type: "lines",
           linesClass: "line",
         });
+
+        // Set initial hidden states for split text
+        gsap.set(split1.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+        gsap.set(split2.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+        gsap.set(split3.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+        gsap.set([".airpods-wrap", ".photo-wrap", ".laptop-wrap"], { clipPath: "inset(100% 0% 0% 0%)" });
 
         const tl = gsap.timeline();
 
@@ -95,15 +102,14 @@ export default function Hero() {
         });
 
         // Hero entrance animation
-        tl.from(".hero", {
-          scaleY: 0,
+        tl.to(".hero", {
+          scaleY: 1,
           transformOrigin: "bottom",
           duration: 1.2,
           ease: "expo.inOut",
         })
-          .fromTo(
+          .to(
             split1.lines,
-            { clipPath: "inset(100% 0% 0% 0%)" },
             {
               clipPath: "inset(0% 0% 0% 0%)",
               duration: 1.6,
@@ -111,9 +117,8 @@ export default function Hero() {
               stagger: 0.12,
             }
           )
-          .fromTo(
+          .to(
             split2.lines,
-            { clipPath: "inset(100% 0% 0% 0%)" },
             {
               clipPath: "inset(0% 0% 0% 0%)",
               duration: 1.6,
@@ -122,9 +127,8 @@ export default function Hero() {
             },
             "<"
           )
-          .fromTo(
+          .to(
             split3.lines,
-            { clipPath: "inset(100% 0% 0% 0%)" },
             {
               clipPath: "inset(0% 0% 0% 0%)",
               duration: 1.6,
@@ -133,9 +137,8 @@ export default function Hero() {
             },
             "<"
           )
-          .fromTo(
+          .to(
             [".airpods-wrap", ".photo-wrap", ".laptop-wrap"],
-            { clipPath: "inset(100% 0% 0% 0%)" },
             {
               clipPath: "inset(0% 0% 0% 0%)",
               duration: 1.2,
@@ -152,7 +155,7 @@ export default function Hero() {
       ctx.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
-  }, [assetsLoaded]);
+  }, [assetsLoaded, introComplete]);
 
   return (
     <section className="hero relative min-h-[95vh]">

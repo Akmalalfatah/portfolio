@@ -62,12 +62,15 @@ export default function Projects() {
             </div>
 
             <div className="max-w-[1440px] mx-auto px-[25px] mt-[40px]">
-                <a
-                    href="/work"
-                    className="text-[25px] font-medium font-ui italic underline inline-block"
+                <button
+                    onClick={() => {
+                        window.scrollTo(0, 0);
+                        navigate('/work');
+                    }}
+                    className="text-[25px] font-medium font-ui italic underline inline-block cursor-pointer bg-transparent border-none p-0"
                 >
                     See More +
-                </a>
+                </button>
             </div>
         </section>
     )

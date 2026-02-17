@@ -1,6 +1,5 @@
 import gsap from 'gsap'
 import { ScrollTrigger, SplitText } from 'gsap/all'
-import Navbar from '@/components/navbar/Navbar'
 import Hero from '@/sectionHome/Hero'
 import About from '@/sectionHome/About'
 import Experience from '@/sectionHome/Experience'
@@ -12,7 +11,7 @@ import { useEffect } from 'react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-export default function Home() {
+export default function Home({ introComplete }) {
     useEffect(() => {
         const lenis = new Lenis({
             smooth: true,
@@ -35,7 +34,7 @@ export default function Home() {
 
     return (
         <>
-            <Hero />
+            <Hero introComplete={introComplete} />
             <About />
             <Experience />
             <Projects />
