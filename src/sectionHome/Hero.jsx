@@ -12,10 +12,8 @@ export default function Hero({ introComplete }) {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
 
   useEffect(() => {
-    // HIDE EVERYTHING IMMEDIATELY on mount
     gsap.set(".hero", { scaleY: 0 });
 
-    // Preload assets
     const preloadAssets = async () => {
       const imagePromises = [
         new Promise((resolve) => {
@@ -31,18 +29,13 @@ export default function Hero({ introComplete }) {
           img.src = airpodsImg;
         }),
         new Promise((resolve) => {
-          const video = document.createElement('video');
+          const video = document.createElement("video");
           video.onloadeddata = resolve;
           video.onerror = resolve;
           video.src = photoVid;
-        })
+        }),
       ];
-
-      await Promise.all([
-        ...imagePromises,
-        document.fonts.ready
-      ]);
-
+      await Promise.all([...imagePromises, document.fonts.ready]);
       setAssetsLoaded(true);
     };
 
@@ -50,146 +43,155 @@ export default function Hero({ introComplete }) {
   }, []);
 
   useEffect(() => {
-    // WAIT for both assets AND intro to complete
     if (!assetsLoaded || !introComplete) return;
 
-    const ctx = gsap.context(() => {
-      const startAnimation = () => {
-        const split1 = new SplitText(".hero-text:nth-child(1) .font-ui", {
-          type: "lines",
-          linesClass: "line",
-        });
+    let mm = gsap.matchMedia();
 
-        const split2 = new SplitText(".hero-text:nth-child(2) .font-ui", {
-          type: "lines",
-          linesClass: "line",
-        });
+    mm.add({
+      isDesktop: "(min-width: 768px)",
+      isMobile: "(max-width: 767px)"
+    }, (context) => {
+      const { isDesktop } = context.conditions;
 
-        const split3 = new SplitText(".mini-text", {
-          type: "lines",
-          linesClass: "line",
-        });
+      const split1 = new SplitText(".hero-text-1 .font-ui", {
+        type: "lines",
+        linesClass: "line",
+      });
+      const split2 = new SplitText(".hero-text-2 .font-ui", {
+        type: "lines",
+        linesClass: "line",
+      });
+      const split3 = new SplitText(".mini-text", {
+        type: "lines",
+        linesClass: "line",
+      });
 
-        // Set initial hidden states for split text
-        gsap.set(split1.lines, { clipPath: "inset(100% 0% 0% 0%)" });
-        gsap.set(split2.lines, { clipPath: "inset(100% 0% 0% 0%)" });
-        gsap.set(split3.lines, { clipPath: "inset(100% 0% 0% 0%)" });
-        gsap.set([".airpods-wrap", ".photo-wrap", ".laptop-wrap"], { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(split1.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(split2.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(split3.lines, { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set([".airpods-wrap", ".photo-wrap", ".laptop-wrap"], {
+        clipPath: "inset(100% 0% 0% 0%)",
+      });
 
-        const tl = gsap.timeline();
+      // Kontrol intensitas Parallax Scroll terpisah agar ramah layar sentuh mobile
+      gsap.to([".laptop-wrap", ".airpods-wrap"], {
+        y: isDesktop ? -60 : -25,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+        },
+      });
 
-        // Parallax effects
-        gsap.to([".laptop-wrap", ".airpods-wrap"], {
-          y: -60,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
+      gsap.to(".photo-wrap", {
+        y: isDesktop ? -150 : -45,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+        },
+      });
 
-        gsap.to(".photo-wrap", {
-          y: -150,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-
-        // Hero entrance animation
-        tl.to(".hero", {
-          scaleY: 1,
-          transformOrigin: "bottom",
-          duration: 0.5,
-          ease: "expo.inOut",
+      const tl = gsap.timeline();
+      tl.to(".hero", {
+        scaleY: 1,
+        transformOrigin: "bottom",
+        duration: 0.5,
+        ease: "expo.inOut",
+      })
+        .to(split1.lines, {
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 1.6,
+          ease: "expo.out",
+          stagger: 0.12,
         })
-          .to(
-            split1.lines,
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.6,
-              ease: "expo.out",
-              stagger: 0.12,
-            }
-          )
-          .to(
-            split2.lines,
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.6,
-              ease: "expo.out",
-              stagger: 0.12,
-            },
-            "<"
-          )
-          .to(
-            split3.lines,
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.6,
-              ease: "expo.out",
-              stagger: 0.12,
-            },
-            "<"
-          )
-          .to(
-            [".airpods-wrap", ".photo-wrap", ".laptop-wrap"],
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.2,
-              ease: "expo.out",
-            },
-            "<"
-          );
-      };
-
-      startAnimation();
+        .to(
+          split2.lines,
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", stagger: 0.12 },
+          "<"
+        )
+        .to(
+          split3.lines,
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", stagger: 0.12 },
+          "<"
+        )
+        .to(
+          [".airpods-wrap", ".photo-wrap", ".laptop-wrap"],
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: "expo.out" },
+          "<"
+        );
     });
 
     return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      mm.revert();
     };
   }, [assetsLoaded, introComplete]);
 
   return (
-    <section className="hero relative min-h-[95vh]">
-      <div className="hero-text w-[850px] left-[178px] top-[50px] absolute justify-start">
-        <span className="font-ui text-[45px] leading-[65px]">
+    <section className="hero relative min-h-screen overflow-hidden pb-[60px] md:pb-0">
+
+      {/* Text block 1 */}
+      <div className="hero-text-1
+        md:absolute md:w-[850px] md:left-[178px] md:top-[50px]
+        px-[24px] pt-[90px] md:px-0 md:pt-0"
+      >
+        <span className="font-ui text-[24px] leading-[38px] md:text-[45px] md:leading-[65px] block">
           Programming is more than writing code. It's about{" "}
           <span className="italic font-medium">understanding problems</span> and building{" "}
           <span className="italic font-medium">practical solutions.</span>
         </span>
       </div>
 
-      <div className="hero-text w-[720px] left-[670px] top-[250px] absolute text-right">
-        <span className="font-ui text-[45px] leading-[65px]">
+      {/* Text block 2 */}
+      <div className="hero-text-2 text-right
+        md:absolute md:w-[720px] md:left-[670px] md:top-[250px]
+        px-[24px] mt-[24px] md:px-0 md:mt-0"
+      >
+        <span className="font-ui text-[24px] leading-[38px] md:text-[45px] md:leading-[65px] block">
           As a student, my work emphasizes{" "}
           <span className="italic font-medium">clarity, usability,</span> and{" "}
           <span className="italic font-medium">continuous learning.</span>
         </span>
       </div>
 
-      <div className="laptop-wrap w-[270px] h-[400px] left-[237px] top-[250px] absolute overflow-hidden">
-        <img src={laptopImg} className="w-full h-full object-cover" />
+      {/* Satu Wadah Media Bersama:
+        - Mobile: Menggunakan Flexbox mengalir ke bawah secara normal (relative).
+        - Desktop (md:): Berubah menjadi kontainer pembungkus kaku untuk koordinat posisi absolut bawaan Anda.
+      */}
+      <div className="media-container relative w-full mt-[40px] px-[24px] md:px-0 md:mt-0 md:absolute md:top-0 md:left-0 md:w-full md:h-full pointer-events-none">
+        
+        {/* Row Atas: Video & Laptop di Mobile */}
+        <div className="flex gap-[12px] md:block w-full">
+          {/* Photo/Video Wrap */}
+          <div className="photo-wrap w-[38%] aspect-[2/3] md:w-[205px] md:h-[306px] md:absolute md:left-[90px] md:top-[333px] overflow-hidden flex-shrink-0">
+            <video src={photoVid} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+          </div>
+
+          {/* Laptop Wrap */}
+          <div className="laptop-wrap flex-1 aspect-[3/4] md:w-[270px] md:h-[400px] md:absolute md:left-[237px] md:top-[250px] overflow-hidden">
+            <img src={laptopImg} className="w-full h-full object-cover" alt="Laptop" />
+          </div>
+        </div>
+
+        {/* Row Bawah: Airpods & Teks Scroll di Mobile */}
+        <div className="flex justify-between items-end mt-[24px] md:block w-full">
+          {/* Airpods Wrap */}
+          <div className="airpods-wrap w-[40%] aspect-square md:w-[210px] md:h-[268px] md:absolute md:left-[950px] md:top-[30px] lg:top-[400px] overflow-hidden">
+            <img src={airpodsImg} className="w-full h-full object-cover" alt="Airpods" />
+          </div>
+
+          {/* Mini Scroll Text */}
+          <div className="mini-text md:absolute md:left-[85%] lg:left-[1300px] md:top-[50px] lg:top-[600px]">
+            <span className="font-display text-[18px] md:text-[24px]">(*Scroll. )</span>
+          </div>
+        </div>
+
       </div>
 
-      <div className="photo-wrap w-[205px] h-[306px] left-[90px] top-[333px] absolute overflow-hidden">
-        <video src={photoVid} autoPlay muted loop playsInline className="w-full h-full object-cover" />
-      </div>
-
-      <div className="airpods-wrap w-[210px] h-[268px] left-[950px] top-[390px] absolute overflow-hidden">
-        <img src={airpodsImg} className="w-full h-full object-cover" />
-      </div>
-
-      <div className="mini-text left-[1300px] top-[600px] absolute">
-        <span className="font-display text-[24px] ">(*Scroll. )</span>
-      </div>
     </section>
   );
 }

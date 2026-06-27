@@ -82,17 +82,27 @@ export default function AboutPage() {
     return (
         <section
             ref={pageRef}
-            className="about-page relative min-h-screen w-full px-6 pt-[100px]"
+            className="about-page relative min-h-screen w-full px-[16px] md:px-6 pt-[80px] md:pt-[140px] pb-[60px]"
         >
-            <div className="w-[1300px] mx-auto flex items-start gap-[50px]">
+            {/* Poin Perubahan Utama:
+              - w-full max-w-[1300px]: Agar di mobile lebarnya fluid, di desktop maksimal 1300px
+              - flex-col md:flex-row: Di mobile berjejer ke bawah, di desktop berjejer ke samping
+              - gap-[20px] md:gap-[50px]: Jarak antar elemen menyesuaikan layar
+            */}
+            <div className="w-full max-w-[1300px] mx-auto flex flex-col md:flex-row items-start gap-[20px] md:gap-[50px]">
 
-                <div className="min-w-[100px] flex-shrink-0">
-                    <span className="about-title font-display text-[20px] font-medium text-gray-800">
+                <div className="min-w-none md:min-w-[100px] flex-shrink-0">
+                    <span className="about-title font-display text-[18px] md:text-[20px] font-medium text-gray-800 block">
                         (*About.)
                     </span>
                 </div>
 
-                <div className="flex-1 font-ui text-[35px] leading-[55px] flex flex-col gap-[30px] text-justify">
+                {/* Poin Perubahan Teks:
+                  - text-[22px] md:text-[35px]: Ukuran font mengecil di mobile agar pas di layar HP
+                  - leading-[34px] md:leading-[55px]: Jarak baris disesuaikan dengan ukuran font mobile
+                  - text-left md:text-justify: Di mobile lebih rapi text-left karena text-justify sering membuat jeda spasi terlalu renggang jika layarnya sempit
+                */}
+                <div className="flex-1 font-ui text-[22px] md:text-[35px] leading-[34px] md:leading-[55px] flex flex-col gap-[20px] md:gap-[30px] text-left md:text-justify">
 
                     <p className="about-paragraph italic font-medium">
                         Hello People!
